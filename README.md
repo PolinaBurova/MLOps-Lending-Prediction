@@ -38,6 +38,7 @@ conda env remove --name rumos_bank
 conda env list  # (Optional: Check if the environment was removed)
 conda env create -f conda.yml
 conda activate rumos_bank
+```
 
 
 This way, users can easily recreate the environment using the provided conda environment file.
@@ -47,28 +48,35 @@ This way, users can easily recreate the environment using the provided conda env
 
 1.  Define the path where MLflow will store tracking data:
 
+    ```
     uri = Path('C:\\Users\\polin\\Downloads\\projecto_final_OML\\projecto_final\\rumos_bank\\mlruns\\')
     uri.mkdir(parents=True, exist_ok=True)
     mlflow.set_tracking_uri(uri_as_uri)
+    ```
 
 2. Define MLFlow Experiment (e.g. Logistic Regression)
-    
+    ```
     mlflow.set_experiment("Logistic_Regression_Experiment")
+    ```
 
 3. Assign dataset to MLFlow:
-
+    ```
     train_data = pd.concat([X_train, y_train], axis=1)
     train_dataset = mlflow.data.from_pandas(train_data, targets='default.payment.next.month', name="Rumos Bank Train Dataset")
     mlflow.log_input(train_dataset, context="train")
     mlflow.log_param("seed", SEED)
+    ```
 
 4. Create pipeline for each model (scaler and respective model); assign the parameters.
 
 5. End any outstanding run: 
+    ```
     mlflow.end_run()
+    ```
 
 6. Start a new run (I created nested runs to keep it more organized); Log the parameters and end with logging the final model. E.g. Logistic Regression run:
 
+    ```
     with mlflow.start_run(run_name="Logistic Regression Run", nested = True):
     # Train GridSearchCV with the pipeline
     clf_lr = GridSearchCV(lr_pipeline, parameters, cv=5)
@@ -99,12 +107,17 @@ This way, users can easily recreate the environment using the provided conda env
     plt.title('Total Cost vs Threshold Curve')
     plt.savefig('total_cost_vs_threshold.png')
     mlflow.log_artifact('total_cost_vs_threshold.png')
+    ```
 
     # Log the final model
+    ```
     mlflow.sklearn.log_model(clf_lr.best_estimator_, artifact_path="lr_pipeline", registered_model_name="logistic_regression_test", input_example=X_train)
+    ```
 
 7. End the run:
+    ```
     mlflow.end_run()
+    ```
 
 8. View the run in MLFlow UI - in terminal, activate rumos_bank environment:
     ```
@@ -120,27 +133,35 @@ This way, users can easily recreate the environment using the provided conda env
 ## Testing the registered models
 
 1. To test the registered models, go to notebook "mlflow_read_models" in rumos_bank/notebook. There we can predict the output of each model and its version. Currently, it's set to KNN_test version 3, which is the latest version of this model: 
+    ```
     model_name = "KNN_test"
     model_version = "3"
 
     model = mlflow.pyfunc.load_model(f"models:/{model_name}/{model_version}")
     model
+    ```
 
 2. Then, we created a sample of our dataset and ran a prediction using the model:
+    ```
     model.predict(input_data.drop("default.payment.next.month", axis=1))
+    ```
     
 
 ## Running the application
 
 1. Before running the application, go to config/app and fill in the details with the best model tested. In this case, Random Forest, and its latest version, 1:
+    ```
     {
     "model_name": "random_forest_test",
     "model_version": 1,
     "tracking_uri": "C:\\Users\\polin\\Downloads\\projecto_final_OML\\projecto_final\\rumos_bank\\mlruns"
 }
+    ```
 
 2. Go to src/app.py, activate the current environment (rumos_bank) and run the command:
+    ```
     `python src/app.py`
+    ```
 
 This application will read the config/app.json with the best model, which will be loaded into the application.
 It will generate a code http://127.0.0.1:5006 which will open FastAPI application (screenshots saved in rumos_bank/src).
