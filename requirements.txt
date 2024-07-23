@@ -1,0 +1,6 @@
+ipykernel
+waitress
+fastapi
+uvicorn
+requests
+pytest

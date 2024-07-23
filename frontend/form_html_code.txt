@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumos Bank Lending Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        form {
+            text-align: left;
+        }
+        label {
+            width: 50%;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="number"] {
+            width: 20%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 1.2em;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Diabetes Predictor</h1>
+        <form id="bank">
+            <label for="LIMIT_BAL">LIMIT_BAL:</label>
+            <input type="number" id="LIMIT_BAL" name="LIMIT_BAL" step="0.00001"><br><br>
+            <label for="SEX">SEX:</label>
+            <input type="number" id="SEX" name="SEX"><br><br>
+            <label for="EDUCATION">EDUCATION:</label>
+            <input type="number" id="EDUCATION" name="EDUCATION"><br><br>
+            <label for="MARRIAGE">MARRIAGE:</label>
+            <input type="number" id="MARRIAGE" name="MARRIAGE"><br><br>
+            <label for="AGE">AGE:</label>
+            <input type="number" id="AGE" name="AGE"><br><br>
+            <label for="PAY_0">PAY_0:</label>
+            <input type="number" id="PAY_0" name="PAY_0"><br><br>
+            <label for="PAY_2">PAY_2:</label>
+            <input type="number" id="PAY_2" name="PAY_2"><br><br>
+            <label for="PAY_3">PAY_3:</label>
+            <input type="number" id="PAY_3" name="PAY_3"><br><br>
+            <label for="PAY_4">PAY_4:</label>
+            <input type="number" id="PAY_4" name="PAY_4"><br><br>
+            <label for="PAY_5">PAY_5:</label>
+            <input type="number" id="PAY_5" name="PAY_5"><br><br>
+            <label for="PAY_6">PAY_6:</label>
+            <input type="number" id="PAY_6" name="PAY_6"><br><br>
+            <label for="BILL_AMT1">BILL_AMT1:</label>
+            <input type="number" id="BILL_AMT1" name="BILL_AMT1" step="0.00001"><br><br>
+            <label for="BILL_AMT2">BILL_AMT2:</label>
+            <input type="number" id="BILL_AMT2" name="BILL_AMT2" step="0.00001"><br><br>
+            <label for="BILL_AMT3">BILL_AMT3:</label>
+            <input type="number" id="BILL_AMT3" name="BILL_AMT3" step="0.00001"><br><br>
+            <label for="BILL_AMT4">BILL_AMT4:</label>
+            <input type="number" id="BILL_AMT4" name="BILL_AMT4" step="0.00001"><br><br>
+            <label for="BILL_AMT5">BILL_AMT5:</label>
+            <input type="number" id="BILL_AMT5" name="BILL_AMT5" step="0.00001"><br><br>
+            <label for="BILL_AMT6">BILL_AMT6:</label>
+            <input type="number" id="BILL_AMT6" name="BILL_AMT6" step="0.00001"><br><br>
+            <label for="PAY_AMT1">PAY_AMT1:</label>
+            <input type="number" id="PAY_AMT1" name="PAY_AMT1" step="0.00001"><br><br>
+            <label for="PAY_AMT2">PAY_AMT2:</label>
+            <input type="number" id="PAY_AMT2" name="PAY_AMT2" step="0.00001"><br><br>
+            <label for="PAY_AMT3">PAY_AMT3:</label>
+            <input type="number" id="PAY_AMT3" name="PAY_AMT3" step="0.00001"><br><br>
+            <label for="PAY_AMT4">PAY_AMT4:</label>
+            <input type="number" id="PAY_AMT4" name="PAY_AMT4" step="0.00001"><br><br>
+            <label for="PAY_AMT5">PAY_AMT5:</label>
+            <input type="number" id="PAY_AMT5" name="PAY_AMT5" step="0.00001"><br><br>
+            <label for="PAY_AMT6">PAY_AMT6:</label>
+            <input type="number" id="PAY_AMT6" name="PAY_AMT6" step="0.00001"><br><br>
+            <input type="submit" value="Predict">
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+
+        document.getElementById('bank').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            fetch('http://127.0.0.1:5006/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                if (data.prediction === 1) {
+                    resultDiv.innerHTML = 'Bad Lending candidate. &#x1F625;'; // Red sad face emoji
+                    resultDiv.style.color = 'red';
+                } else if (data.prediction === 0) {
+                    resultDiv.innerHTML = 'Good lending candidate. &#x1F600;'; // Green smiling face emoji
+                    resultDiv.style.color = 'green';
+                } else {
+                    resultDiv.innerHTML = 'Error: Unable to predict. &#x1F914;'; // Thinking face emoji
+                    resultDiv.style.color = 'black';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
