@@ -152,3 +152,28 @@ Note: I changed to port 5006 because the first time I tried with port 5002, I go
 1. While the http://127.0.0.1:5006 is still running, go to notebooks/test_requests
 2. Load "requests" and generate a list of samples from the dataset.
 3. Run the code "response = requests.post("http://127.0.0.1:5006/docs", json=request_dict)", it should give a prediction of the outcome based on the input data.
+
+
+
+
+##  Note on Deletion of mlruns Folder
+Please note that the mlruns folder has been deleted from this repository. The primary reason for this decision is the repository size: The size of the mlruns folder was too large, making it impractical to include in the repository, especially for version control with GitHub.
+
+If you need to track experiments and runs, please set up a local instance of MLflow and ensure that your environment is properly configured to handle the logging and storage of experiment data. Here are the steps to do so:
+
+1. Install MLflow: Ensure MLflow is installed in your environment.
+ ```
+pip install mlflow
+ ```
+
+2. Set Up MLflow Tracking URI: Configure the tracking URI to a location that suits your needs (local filesystem, remote server, etc.).
+```
+import mlflow
+mlflow.set_tracking_uri('your_tracking_uri')
+```
+
+3. Run Your Experiments: Execute your experiments as usual, ensuring that they log to the configured tracking URI
+
+
+
+
