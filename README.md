@@ -110,7 +110,7 @@ To keep it more clear and organized, each ML model has been split into separate 
     mlflow.log_artifact('total_cost_vs_threshold.png')
     ```
 
-    # Log the final model
+    Log the final model
     ```
     mlflow.sklearn.log_model(clf_lr.best_estimator_, artifact_path="lr_pipeline", registered_model_name="logistic_regression_test", input_example=X_train)
     ```
