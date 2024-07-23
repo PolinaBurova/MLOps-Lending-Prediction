@@ -44,7 +44,8 @@ conda activate rumos_bank
 This way, users can easily recreate the environment using the provided conda environment file.
 
 
-## Visualize runs through UI (MlFlow): To keep it more clear and organized, each ML model has been split into separate notebooks which already include the below steps, located in rumos_bank/notebooks. Each notebook has the necessary pre-processing steps and MLFlow configurations. This will ensure that each notebook can run independently without missing any required steps.
+## Visualize runs through UI (MlFlow): 
+To keep it more clear and organized, each ML model has been split into separate notebooks which already include the below steps, located in rumos_bank/notebooks. Each notebook has the necessary pre-processing steps and MLFlow configurations. This will ensure that each notebook can run independently without missing any required steps.
 
 1.  Define the path where MLflow will store tracking data:
 
