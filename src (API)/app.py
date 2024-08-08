@@ -8,7 +8,7 @@ import pandas as pd
 
 
 
-# define the inputs we expect our API to receive in the request body as JSON
+# definir os inputs que estamos à espera que a nossa API receba no body do pedido como JSON
 class Request(BaseModel):
     LIMIT_BAL: float
     SEX: int
@@ -35,7 +35,7 @@ class Request(BaseModel):
     PAY_AMT6: float
 
 
-# create an app
+# criar uma app
 app = fastapi.FastAPI()
 
 
@@ -48,33 +48,34 @@ app.add_middleware(
 
 
 
-# app function is initiated
+# função que é chamada quando a app é iniciada
 @app.on_event("startup")
 async def startup_event():
-    # create a set of tracking URI to appoint the database file 
-    # where the metadata is registered
-    with open(r'C:\Users\polin\Downloads\projecto_final_OML\projecto_final\rumos_bank\config\app.json') as f:
+    # fazemos set do tracking URI para apontar para o ficheiro de db
+    # onde estão os metadados dos nossos modelos registrados
+    with open(r'C:\Users\polin\Downloads\OML_Final_Project\rumos_bank\config\app.json') as f:
         config = json.load(f)
     mlflow.set_tracking_uri(config["tracking_uri"])
 
 
-# predict endpoint which will be called to receive the requests with the inputs of the model 
-# and will return a prediction of the model 
+# endpoint de predict que será chamado para receber pedidos com os inputs para o modelo
+# e que vai retornar na resposta a previsão do modelo
 @app.post("/predict")
 async def root(input: Request):  
-    # read app config
-    with open(r'C:\Users\polin\Downloads\projecto_final_OML\projecto_final\rumos_bank\config\app.json') as f:
+    # lê a config da app
+    with open(r'C:\Users\polin\Downloads\OML_Final_Project\rumos_bank\config\app.json') as f:
         config = json.load(f)
-    # load registered model and its version
+    # fazemos load do modelo registado
+    # de acordo com o model name e model version lidos da config
     model = mlflow.pyfunc.load_model(
         model_uri=f"models:/{config['model_name']}/{config['model_version']}"
     )
-    # create a dataframe with model's input that we received in the request 
+    # construimos um dataframe com os inputs do modelo que recebmos no pedido
     input_df = pd.DataFrame.from_dict({k: [v] for k, v in input.dict().items()})
-    # call the predict function and have its prediction 
+    # chamamos a função de predict do modelo e temos a previsao do mesmo
     prediction = model.predict(input_df)
-    # return a dictionary format answer with key associated to prediction 
+    # retornamos como resposta um diccionário com a predição associada à chave "prediction"
     return {"prediction": prediction.tolist()[0]}
 
 
-uvicorn.run(app=app, port=5006)
+uvicorn.run(app=app, port=5007)

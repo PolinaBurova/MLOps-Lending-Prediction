@@ -1,5 +1,5 @@
 {
     "model_name": "random_forest_test",
-    "model_version": 1,
-    "tracking_uri": "C:\\data\\mlruns"
+    "model_version": 3,
+    "tracking_uri": "file:///c:/Users//..//rumos_bank/mlruns"
 }
