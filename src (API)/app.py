@@ -8,7 +8,7 @@ import pandas as pd
 
 
 
-# definir os inputs que estamos à espera que a nossa API receba no body do pedido como JSON
+# Define the inputs that we expect our API to receive in the body of the request as JSON.
 class Request(BaseModel):
     LIMIT_BAL: float
     SEX: int
@@ -35,7 +35,7 @@ class Request(BaseModel):
     PAY_AMT6: float
 
 
-# criar uma app
+# create an app
 app = fastapi.FastAPI()
 
 
@@ -48,33 +48,37 @@ app.add_middleware(
 
 
 
-# função que é chamada quando a app é iniciada
+# Function that is called when the app is started.
 @app.on_event("startup")
 async def startup_event():
-    # fazemos set do tracking URI para apontar para o ficheiro de db
-    # onde estão os metadados dos nossos modelos registrados
-    with open(r'C:\Users\polin\Downloads\OML_Final_Project\rumos_bank\config\app.json') as f:
+    # We set the tracking URI to point to the db file
+    # where the metadata of our registered models is stored
+
+    with open(r'C:\rumos_bank\...config\app.json') as f:
         config = json.load(f)
     mlflow.set_tracking_uri(config["tracking_uri"])
 
 
-# endpoint de predict que será chamado para receber pedidos com os inputs para o modelo
-# e que vai retornar na resposta a previsão do modelo
+# Predict endpoint that will be called to receive requests with the inputs for the model
+# and will return the model's prediction in the response
+
 @app.post("/predict")
 async def root(input: Request):  
-    # lê a config da app
-    with open(r'C:\Users\polin\Downloads\OML_Final_Project\rumos_bank\config\app.json') as f:
+    # read app config
+    with open(r'C:\Users\...config\app.json') as f:
         config = json.load(f)
-    # fazemos load do modelo registado
-    # de acordo com o model name e model version lidos da config
+    # We load the registered model
+    # according to the model name and model version read from the config
+
     model = mlflow.pyfunc.load_model(
         model_uri=f"models:/{config['model_name']}/{config['model_version']}"
     )
-    # construimos um dataframe com os inputs do modelo que recebmos no pedido
+    # We construct a DataFrame with the model inputs received in the request
     input_df = pd.DataFrame.from_dict({k: [v] for k, v in input.dict().items()})
-    # chamamos a função de predict do modelo e temos a previsao do mesmo
+    # # We call the predict function of the model and obtain its prediction
     prediction = model.predict(input_df)
-    # retornamos como resposta um diccionário com a predição associada à chave "prediction"
+    # We return as a response a dictionary with the prediction associated with the key "prediction"
+
     return {"prediction": prediction.tolist()[0]}
 
 
